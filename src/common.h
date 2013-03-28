@@ -3,12 +3,9 @@
 
 namespace fs {
 
-enum Status {
-	OK, IGNORED, FAILED, UNKNOWN,
+enum Status: char {
+	ok, ignored, failed, unknown,
 };
-
-extern char const PATH_DELIM;
-extern char const OTHER_PATH_DELIM;
 
 }
 

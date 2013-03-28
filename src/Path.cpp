@@ -6,6 +6,9 @@
 
 namespace fs {
 
+char const pathDelim = '\\';
+char const otherPathDelim = '/';
+
 Path::Path(char const path[])
 {
 	pathList.push_back(path);
@@ -41,7 +44,7 @@ Path Path::append(Path const & subpath) const
 	return result;
 }
 
-Path::operator std::string const &() const
+Path::operator std::string() const
 {
 	return getPath();
 }
@@ -49,12 +52,12 @@ Path::operator std::string const &() const
 void decode(std::string & path)
 {
 	std::for_each(path.begin(),path.end(),[](char & ch) {
-		if( ch == OTHER_PATH_DELIM ) ch = PATH_DELIM;
+		if( ch == otherPathDelim ) ch = pathDelim;
 	});
 }
 
 
-std::string const & Path::getPath() const
+std::string Path::getPath() const
 {
     if( pathList.empty() ) return std::string();
             
@@ -62,7 +65,7 @@ std::string const & Path::getPath() const
 		std::string computed = std::accumulate(pathList.begin() + 1,pathList.end(),pathList.front(),
 			[this](std::string const & path, std::string const & subpath) -> std::string {
 				if( isDelim(path.back()) && isDelim(subpath.front()) ) return path.substr(0,path.size()-1) + subpath;
-				if( ! isDelim(path.back()) && ! isDelim(subpath.front()) ) return path + PATH_DELIM + subpath;
+				if( ! isDelim(path.back()) && ! isDelim(subpath.front()) ) return path + pathDelim + subpath;
 				return path + subpath;
 			});
 		decode(computed);
@@ -74,7 +77,7 @@ std::string const & Path::getPath() const
 
 bool Path::isDelim(char ch)
 {
-	return ch == PATH_DELIM || ch == OTHER_PATH_DELIM;
+	return ch == pathDelim || ch == otherPathDelim;
 }
 
 }

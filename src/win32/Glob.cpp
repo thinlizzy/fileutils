@@ -112,9 +112,9 @@ bool GlobIterator::operator!=(GlobIterator const & it) const
 
 Status GlobIterator::getStatus()
 {
-	if( file.impl->invalid() ) return FAILED;
-	if( file.impl->noMoreFiles() ) return IGNORED;
-	return OK;
+	if( file.impl->invalid() ) return failed;
+	if( file.impl->noMoreFiles() ) return ignored;
+	return ok;
 }
 
 }

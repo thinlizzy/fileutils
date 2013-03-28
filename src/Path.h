@@ -16,8 +16,8 @@ public:
 	Path append(char const subpath[]) const;
 	Path append(std::string const & subpath) const;
 	Path append(Path const & subpath) const;
-	std::string const & getPath() const;
-	operator std::string const &() const;
+	std::string getPath() const;
+	operator std::string() const;
 
 	static bool isDelim(char ch);
 };

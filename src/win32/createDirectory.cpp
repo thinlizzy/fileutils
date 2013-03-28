@@ -6,13 +6,13 @@ namespace fs {
 Status createDirectory(char const path[])
 {
 	auto ok = CreateDirectoryA(path,0);
-	if( ok ) return OK;
+	if( ok ) return Status::ok;
 	auto error = GetLastError();
 	switch(error) {
-		case ERROR_PATH_NOT_FOUND: return FAILED;
-		case ERROR_ALREADY_EXISTS: return IGNORED;
+		case ERROR_PATH_NOT_FOUND: return failed;
+		case ERROR_ALREADY_EXISTS: return ignored;
 	}
-	return UNKNOWN;
+	return unknown;
 }
 
 Status createDirectory(std::string const & path)
