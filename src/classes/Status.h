@@ -1,5 +1,5 @@
-#ifndef COMMON_H_GUARD_kbb0m432uj
-#define COMMON_H_GUARD_kbb0m432uj
+#ifndef STATUS_H_GUARD_kbb0m432uj
+#define STATUS_H_GUARD_kbb0m432uj
 
 namespace fs {
 

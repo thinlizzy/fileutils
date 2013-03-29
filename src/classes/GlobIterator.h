@@ -1,7 +1,7 @@
-#ifndef GLOB_H_GUARD_j3243fdsfs
-#define GLOB_H_GUARD_j3243fdsfs
+#ifndef GLOBITERATOR_H_GUARD_j3243fdsfs
+#define GLOBITERATOR_H_GUARD_j3243fdsfs
 
-#include "common.h"
+#include "Status.h"
 #include <string>
 #include <memory>
 #include <iterator>

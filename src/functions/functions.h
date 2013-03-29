@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H_GUARD_3498urewjfdc
 #define FUNCTIONS_H_GUARD_3498urewjfdc
 
-#include "common.h"
+#include "../classes/Status.h"
 #include <string>
 
 namespace fs {

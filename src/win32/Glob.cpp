@@ -1,4 +1,4 @@
-#include "../Glob.h"
+#include "../classes/GlobIterator.h"
 #include <Windows.h>
 #include <cstring>
 

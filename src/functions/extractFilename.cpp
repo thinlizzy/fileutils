@@ -1,5 +1,5 @@
 #include "functions.h"
-#include "Path.h"
+#include "../classes/Path.h"
 
 namespace fs {
 

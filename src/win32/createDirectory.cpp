@@ -1,5 +1,5 @@
-#include "../functions.h"
 #include <Windows.h>
+#include "../functions/functions.h"
 
 namespace fs {
 
