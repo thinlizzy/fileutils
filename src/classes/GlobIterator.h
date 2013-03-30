@@ -1,26 +1,12 @@
 #ifndef GLOBITERATOR_H_GUARD_j3243fdsfs
 #define GLOBITERATOR_H_GUARD_j3243fdsfs
 
-#include "Status.h"
 #include <string>
-#include <memory>
 #include <iterator>
+#include "Status.h"
+#include "GlobFile.h"
 
 namespace fs {
-
-class GlobImpl;
-
-class GlobFile {
-    friend class GlobIterator;
-    std::unique_ptr<GlobImpl> impl;
-    GlobFile(GlobImpl * impl);
-public:
-    GlobFile();
-    ~GlobFile();
-    char const * filename() const;
-    bool isDirectory() const;
-    bool isSpecialDirectory() const;
-};
 
 class GlobIterator: public std::iterator<std::forward_iterator_tag,GlobFile> {
     GlobFile file;

@@ -1,19 +1,41 @@
 #include "../classes/GlobIterator.h"
 #include <Windows.h>
 #include <cstring>
+#include <string>
+#include <iostream>
 
 namespace fs {
+
+std::wstring utf8_to_ws(char const text[])
+{
+    int total = MultiByteToWideChar(CP_UTF8,0,text,-1,0,0);
+    std::wstring converted(total,L'\0');
+    if( MultiByteToWideChar(CP_UTF8,0,text,-1,&converted[0],total) == 0 ) {
+        std::cerr << "error converting string\n";
+    }
+    converted.pop_back();
+    return converted;
+}
+
+std::string wc_to_utf8(wchar_t const text[])
+{
+    int total = WideCharToMultiByte(CP_UTF8,0,text,-1,0,0,0,0);
+    std::string converted(total,'\0');
+    WideCharToMultiByte(CP_UTF8,0,text,-1,&converted[0],total,0,0);
+    converted.pop_back();
+    return converted;
+}
 
 class GlobImpl {
 	HANDLE handle;
 public:
 	DWORD lastError;
-	WIN32_FIND_DATAA data;
+	WIN32_FIND_DATAW data;
 
 	GlobImpl(char const path[]):
 		lastError(0)
 	{
-		handle = FindFirstFileA(path,&data);
+		handle = FindFirstFileW(utf8_to_ws(path).c_str(),&data);
 		if( invalid() ) {
 			lastError = GetLastError();
 		}
@@ -26,7 +48,7 @@ public:
 	bool noMoreFiles() { return lastError == ERROR_NO_MORE_FILES; } 
 
 	bool findNext() {
-		auto res = FindNextFileA(handle,&data);
+		auto res = FindNextFileW(handle,&data);
 		if( ! res ) {
 			lastError = GetLastError();
 		}
@@ -46,9 +68,9 @@ GlobFile::GlobFile()
 GlobFile::~GlobFile()
 {}
 
-char const * GlobFile::filename() const
+std::string GlobFile::filename() const
 {
-	return impl->data.cFileName;
+	return wc_to_utf8(impl->data.cFileName);
 }
 
 bool GlobFile::isDirectory() const
@@ -58,8 +80,8 @@ bool GlobFile::isDirectory() const
 
 bool GlobFile::isSpecialDirectory() const
 {
-	return std::strcmp(impl->data.cFileName,".") == 0 ||
-        std::strcmp(impl->data.cFileName,"..") == 0;
+	return wcscmp(impl->data.cFileName,L".") == 0 ||
+        wcscmp(impl->data.cFileName,L"..") == 0;
 }
 
 // Iterator
