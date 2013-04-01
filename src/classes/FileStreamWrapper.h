@@ -1,0 +1,23 @@
+#ifndef FILE_STREAM_WRAPPER_H_jfj454fdgfdgfd
+#define FILE_STREAM_WRAPPER_H_jfj454fdgfdgfd
+
+#include <fstream>
+#include <memory>
+
+namespace fs {
+
+class FileStreamWrapperImpl;
+    
+class FileStreamWrapper: public std::fstream {
+    std::unique_ptr<FileStreamWrapperImpl> impl;
+public:
+    FileStreamWrapper(char const filename[], std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
+    FileStreamWrapper(FileStreamWrapper && other);
+    virtual ~FileStreamWrapper();
+    void open(char const filename[], std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
+};
+    
+}
+
+#endif
+
