@@ -1,14 +1,9 @@
-#include "functions.h"
 #include "../classes/Path.h"
 
 namespace fs {
 
-std::string extractFilename(char const path[])
-{
-	return extractFilename(std::string(path));
-}
-
-std::string extractFilename(std::string const & path)
+template<typename T>
+std::basic_string<T> extractFilename(std::basic_string<T> const & path)
 {
 	if( path.empty() ) return path;
 
@@ -29,7 +24,7 @@ std::string extractFilename(std::string const & path)
 		++posPath;
 	}
 
-	return std::string(posPath,posPt);
+	return std::basic_string<T>(posPath,posPt);
 }
 
 }

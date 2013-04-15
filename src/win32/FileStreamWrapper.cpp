@@ -1,5 +1,4 @@
 #include "../classes/FileStreamWrapper.h"
-#include "UTF8Converters.h"
 
 #ifdef __MINGW32__
 
@@ -70,8 +69,8 @@ public:
     }
 };
 
-FileStreamWrapper::FileStreamWrapper(char const filename[], std::ios_base::openmode mode):
-    impl(new FileStreamWrapperImpl(utf8_to_ws(filename).c_str(),mode))
+FileStreamWrapper::FileStreamWrapper(NativeString const & filename, std::ios_base::openmode mode):
+    impl(new FileStreamWrapperImpl(filename.wstr.c_str(),mode))
 {
     basic_ios<char>::rdbuf(&impl->fb);
 }
@@ -86,10 +85,10 @@ FileStreamWrapper::~FileStreamWrapper()
 {
 }
 
-void FileStreamWrapper::open(char const filename[], std::ios_base::openmode mode)
+void FileStreamWrapper::open(NativeString const & filename, std::ios_base::openmode mode)
 {
     impl.reset();
-    impl.reset(new FileStreamWrapperImpl(utf8_to_ws(filename).c_str(),mode));
+    impl.reset(new FileStreamWrapperImpl(filename.wstr.c_str(),mode));
     basic_ios<char>::rdbuf(&impl->fb);
 }
 

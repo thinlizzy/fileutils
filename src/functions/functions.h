@@ -2,17 +2,21 @@
 #define FUNCTIONS_H_GUARD_3498urewjfdc
 
 #include "../classes/Status.h"
+#include "../classes/NativeString.h"
 #include <string>
 
 namespace fs {
 
-Status createDirectory(char const path[]);
-Status createDirectory(std::string const & path);
+Status createDirectory(NativeString const & path);
 
 // returns the filename w/o the path and extensions
-std::string extractFilename(char const path[]);
-std::string extractFilename(std::string const & path);
+NativeString extractFilename(NativeString const & path);
+
+template<typename T>
+std::basic_string<T> extractFilename(std::basic_string<T> const & path);
 
 }
+
+#include "extractFilename.hpp"
 
 #endif

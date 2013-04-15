@@ -3,7 +3,6 @@
 #include <cstring>
 #include <string>
 #include <iostream>
-#include "UTF8Converters.h"
 
 namespace fs {
 
@@ -13,10 +12,10 @@ public:
 	DWORD lastError;
 	WIN32_FIND_DATAW data;
 
-	GlobImpl(char const path[]):
+	GlobImpl(wchar_t const pathUTF16[]):
 		lastError(0)
 	{
-		handle = FindFirstFileW(utf8_to_ws(path).c_str(),&data);
+		handle = FindFirstFileW(pathUTF16,&data);
 		if( invalid() ) {
 			lastError = GetLastError();
 		}
@@ -49,9 +48,9 @@ GlobFile::GlobFile()
 GlobFile::~GlobFile()
 {}
 
-std::string GlobFile::filename() const
+NativeString GlobFile::filename() const
 {
-	return wc_to_utf8(impl->data.cFileName);
+    return impl->data.cFileName;
 }
 
 bool GlobFile::isDirectory() const
@@ -67,12 +66,8 @@ bool GlobFile::isSpecialDirectory() const
 
 // Iterator
 
-GlobIterator::GlobIterator(char const path[]):
-    file(new GlobImpl(path))
-{}
-
-GlobIterator::GlobIterator(std::string const & path):
-    file(new GlobImpl(path.c_str()))
+GlobIterator::GlobIterator(NativeString const & path):
+    file(new GlobImpl(path.wstr.c_str()))
 {}
 
 GlobFile & GlobIterator::operator*()

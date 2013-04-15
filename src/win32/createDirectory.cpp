@@ -3,21 +3,17 @@
 
 namespace fs {
 
-Status createDirectory(char const path[])
+Status createDirectory(NativeString const & path)
 {
-	auto ok = CreateDirectoryA(path,0);
+	auto ok = CreateDirectoryW(path.wstr.c_str(),0);
 	if( ok ) return Status::ok;
+    
 	auto error = GetLastError();
 	switch(error) {
 		case ERROR_PATH_NOT_FOUND: return failed;
 		case ERROR_ALREADY_EXISTS: return ignored;
 	}
 	return unknown;
-}
-
-Status createDirectory(std::string const & path)
-{
-	return createDirectory(path.c_str());
 }
 
 }

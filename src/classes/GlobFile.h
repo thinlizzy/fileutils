@@ -2,7 +2,7 @@
 #define GLOB_FILE_H_j3432jvncxxx
 
 #include <memory>
-#include <string>
+#include "NativeString.h"
 
 namespace fs {
     
@@ -15,7 +15,7 @@ class GlobFile {
 public:
     GlobFile();
     ~GlobFile();
-    std::string filename() const;   // UTF-8 string :)
+    NativeString filename() const;
     bool isDirectory() const;
     bool isSpecialDirectory() const;
 };

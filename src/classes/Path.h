@@ -1,25 +1,26 @@
 #ifndef PATH_H_GUARD_dj2434324
 #define PATH_H_GUARD_dj2434324
 
-#include <deque>
-#include <string>
+#include "NativeString.h"
 
 namespace fs {
 
 class Path {
-	mutable std::deque<std::string> pathList;
+	NativeString path;
+    void addDelim();
 public:
 	Path() = default;
-	Path(char const path[]);
-	Path(std::string const & path);
-	Path(std::string && path);
-	Path append(char const subpath[]) const;
-	Path append(std::string const & subpath) const;
+	Path(NativeString const & path);
+	Path append(NativeString const & subpath) const;
 	Path append(Path const & subpath) const;
-	std::string getPath() const;
-	operator std::string() const;
+	NativeString getPath() const;
+	operator NativeString() const;
 
-	static bool isDelim(char ch);
+    static char const delim;
+    static char const otherDelim;
+    static NativeString normalize(NativeString path);    
+    static bool isDelim(char ch);
+    static bool isDelim(wchar_t ch);
 };
 
 }
