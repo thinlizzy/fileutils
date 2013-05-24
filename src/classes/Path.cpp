@@ -2,32 +2,32 @@
 
 namespace fs {
 
-Path::Path(NativeString const & path):
+Path::Path(die::NativeString const & path):
     path(normalize(path))
 {
 }
 
-Path Path::append(NativeString const & subpath) const
+Path Path::append(die::NativeString const & subpath) const
 {
-	Path result(*this);
+    Path result(*this);
     result.addDelim();
-	result.path += normalize(subpath);
-	return result;
+    result.path += normalize(subpath);
+    return result;
 }
 
 Path Path::append(Path const & subpath) const
 {
-	return append(subpath.path);
+    return append(subpath.path);
 }
 
-Path::operator NativeString() const
+Path::operator die::NativeString() const
 {
-	return getPath();
+    return getPath();
 }
 
-NativeString Path::getPath() const
+die::NativeString Path::getPath() const
 {
-	return path;
+    return path;
 }
 
 bool Path::isDelim(char ch)

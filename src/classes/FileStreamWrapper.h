@@ -3,7 +3,7 @@
 
 #include <fstream>
 #include <memory>
-#include "NativeString.h"
+#include <NativeString.h>
 
 namespace fs {
 
@@ -12,10 +12,10 @@ class FileStreamWrapperImpl;
 class FileStreamWrapper: public std::fstream {
     std::unique_ptr<FileStreamWrapperImpl> impl;
 public:
-    FileStreamWrapper(NativeString const & filename, std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
+    FileStreamWrapper(die::NativeString const & filename, std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
     FileStreamWrapper(FileStreamWrapper && other);
     virtual ~FileStreamWrapper();
-    void open(NativeString const & filename, std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
+    void open(die::NativeString const & filename, std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out);
 };
     
 }

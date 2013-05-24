@@ -8,7 +8,7 @@ char const Path::otherDelim = '/';
 char const wdelim = wchar_t(Path::delim);
 char const wotherDelim = wchar_t(Path::otherDelim);
 
-NativeString Path::normalize(NativeString path)
+die::NativeString Path::normalize(die::NativeString path)
 {
     for( wchar_t & ch : path.wstr ) {
         if( ch == wotherDelim ) ch = wdelim;

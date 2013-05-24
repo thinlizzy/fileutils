@@ -7,33 +7,33 @@
 namespace fs {
 
 class GlobImpl {
-	HANDLE handle;
+    HANDLE handle;
 public:
-	DWORD lastError;
-	WIN32_FIND_DATAW data;
+    DWORD lastError;
+    WIN32_FIND_DATAW data;
 
-	GlobImpl(wchar_t const pathUTF16[]):
-		lastError(0)
-	{
-		handle = FindFirstFileW(pathUTF16,&data);
-		if( invalid() ) {
-			lastError = GetLastError();
-		}
-	}
+    GlobImpl(wchar_t const pathUTF16[]):
+        lastError(0)
+    {
+        handle = FindFirstFileW(pathUTF16,&data);
+        if( invalid() ) {
+            lastError = GetLastError();
+        }
+    }
 
-	~GlobImpl() { FindClose(handle); }
+    ~GlobImpl() { FindClose(handle); }
 
-	bool invalid() { return handle == INVALID_HANDLE_VALUE; }
+    bool invalid() { return handle == INVALID_HANDLE_VALUE; }
 
-	bool noMoreFiles() { return lastError == ERROR_NO_MORE_FILES; } 
+    bool noMoreFiles() { return lastError == ERROR_NO_MORE_FILES; } 
 
-	bool findNext() {
-		auto res = FindNextFileW(handle,&data);
-		if( ! res ) {
-			lastError = GetLastError();
-		}
-		return res;
-	}
+    bool findNext() {
+        auto res = FindNextFileW(handle,&data);
+        if( ! res ) {
+            lastError = GetLastError();
+        }
+        return res;
+    }
 };
 
 // File
@@ -48,7 +48,7 @@ GlobFile::GlobFile()
 GlobFile::~GlobFile()
 {}
 
-NativeString GlobFile::filename() const
+die::NativeString GlobFile::filename() const
 {
     return impl->data.cFileName;
 }
@@ -60,13 +60,13 @@ bool GlobFile::isDirectory() const
 
 bool GlobFile::isSpecialDirectory() const
 {
-	return wcscmp(impl->data.cFileName,L".") == 0 ||
-        wcscmp(impl->data.cFileName,L"..") == 0;
+    return wcscmp(impl->data.cFileName,L".") == 0 ||
+    wcscmp(impl->data.cFileName,L"..") == 0;
 }
 
 // Iterator
 
-GlobIterator::GlobIterator(NativeString const & path):
+GlobIterator::GlobIterator(die::NativeString const & path):
     file(new GlobImpl(path.wstr.c_str()))
 {}
 
@@ -92,7 +92,7 @@ GlobFile const * GlobIterator::operator->() const
 
 GlobIterator & GlobIterator::operator++()
 {
-	if( ! file.impl->findNext() ) {
+    if( ! file.impl->findNext() ) {
         file.impl.reset();
     }
     return *this;
@@ -110,9 +110,9 @@ bool GlobIterator::operator!=(GlobIterator const & it) const
 
 Status GlobIterator::getStatus()
 {
-	if( file.impl->invalid() ) return failed;
-	if( file.impl->noMoreFiles() ) return ignored;
-	return ok;
+    if( file.impl->invalid() ) return failed;
+    if( file.impl->noMoreFiles() ) return ignored;
+    return ok;
 }
 
 }

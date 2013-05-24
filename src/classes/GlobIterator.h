@@ -12,7 +12,7 @@ class GlobIterator: public std::iterator<std::forward_iterator_tag,GlobFile> {
     GlobFile file;
 public:
     GlobIterator() = default;
-    explicit GlobIterator(NativeString const & path);
+    explicit GlobIterator(die::NativeString const & path);
 
     GlobFile & operator*();
     GlobFile const & operator*() const;
