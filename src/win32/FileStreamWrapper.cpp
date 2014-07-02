@@ -53,36 +53,68 @@ int wOpenFlags(std::ios_base::openmode mode)
 
 #endif
 
+#include <iostream>
+
 namespace fs {
     
 #ifdef __MINGW32__
 
 // MINGW does not implement the fucking wchar_t * fstream constructor overload, so I have to manually create a __gnu_cxx::stdio_filebuf
+
+// TODO something is wrong here. filebuf is doing seg faults and other awful things
+#define MITIGATION_FIX
+    
+int checkFd(int fd) 
+{
+    if( fd == -1 ) {
+        std::cerr << "error " << errno << std::endl;
+        fd = 0;
+    }
+    return fd;
+}        
     
 class FileStreamWrapperImpl {
 public:
     __gnu_cxx::stdio_filebuf<char> fb;
     
     FileStreamWrapperImpl(wchar_t const * filename, std::ios_base::openmode mode):
-        fb(_wopen(filename,wOpenMode(mode),wOpenFlags(mode)),mode)
+        fb(checkFd(_wopen(filename,wOpenMode(mode),wOpenFlags(mode))),mode)
     {
     }
 };
 
+#ifdef MITIGATION_FIX
+
+// TODO mitigation to the __gnu_cxx::stdio_filebuf problem. it won't work with non-ascii names
+
+FileStreamWrapper::FileStreamWrapper(die::NativeString const & filename, std::ios_base::openmode mode):
+    std::fstream(filename.toUTF8(),mode)
+{
+}
+
+FileStreamWrapper::FileStreamWrapper(FileStreamWrapper && other)
+{
+    std::ios::rdbuf(other.rdbuf());
+    other.std::ios::rdbuf(0);
+}
+
+void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::openmode mode)
+{
+    open(filename.toUTF8(),mode);
+}
+
+#else 
+
 FileStreamWrapper::FileStreamWrapper(die::NativeString const & filename, std::ios_base::openmode mode):
     impl(new FileStreamWrapperImpl(filename.wstr.c_str(),mode))
 {
-    basic_ios<char>::rdbuf(&impl->fb);
+    std::ios::rdbuf(&impl->fb);
 }
 
 FileStreamWrapper::FileStreamWrapper(FileStreamWrapper && other):
     impl(std::move(other.impl))
 {
-    basic_ios<char>::rdbuf(&impl->fb);
-}
-    
-FileStreamWrapper::~FileStreamWrapper()
-{
+    std::ios::rdbuf(&impl->fb);
 }
 
 void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::openmode mode)
@@ -90,6 +122,12 @@ void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::
     impl.reset();
     impl.reset(new FileStreamWrapperImpl(filename.wstr.c_str(),mode));
     basic_ios<char>::rdbuf(&impl->fb);
+}
+
+#endif
+    
+FileStreamWrapper::~FileStreamWrapper()
+{
 }
 
 #else

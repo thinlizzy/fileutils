@@ -15,7 +15,10 @@ class GlobFile {
 public:
     GlobFile();
     ~GlobFile();
+    GlobFile(GlobFile && other);
+    GlobFile & operator=(GlobFile && other);
     die::NativeString filename() const;
+    size_t filesize() const;
     bool isDirectory() const;
     bool isSpecialDirectory() const;
 };

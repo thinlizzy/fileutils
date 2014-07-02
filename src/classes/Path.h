@@ -13,6 +13,7 @@ public:
 	Path(die::NativeString const & path);
 	Path append(die::NativeString const & subpath) const;
 	Path append(Path const & subpath) const;
+    Path replaceFilename(die::NativeString const & filename) const;
 	die::NativeString getPath() const;
 	operator die::NativeString() const;
 

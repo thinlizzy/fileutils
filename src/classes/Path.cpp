@@ -1,4 +1,5 @@
 #include "Path.h"
+#include "../functions/functions.h"
 
 namespace fs {
 
@@ -10,7 +11,11 @@ Path::Path(die::NativeString const & path):
 Path Path::append(die::NativeString const & subpath) const
 {
     Path result(*this);
-    result.addDelim();
+    if( subpath.empty() ) return result;
+        
+    if( ! result.path.empty() ) {
+        result.addDelim();
+    }
     result.path += normalize(subpath);
     return result;
 }
@@ -18,6 +23,11 @@ Path Path::append(die::NativeString const & subpath) const
 Path Path::append(Path const & subpath) const
 {
     return append(subpath.path);
+}
+
+Path Path::replaceFilename(die::NativeString const & filename) const
+{
+    return Path(extractPath(path)).append(filename);
 }
 
 Path::operator die::NativeString() const

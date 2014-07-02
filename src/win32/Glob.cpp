@@ -23,9 +23,11 @@ public:
 
     ~GlobImpl() { FindClose(handle); }
 
-    bool invalid() { return handle == INVALID_HANDLE_VALUE; }
+    bool invalid() const { return handle == INVALID_HANDLE_VALUE; }
 
-    bool noMoreFiles() { return lastError == ERROR_NO_MORE_FILES; } 
+    bool noMoreFiles() const { return lastError == ERROR_NO_MORE_FILES; } 
+    
+    bool hasError() const { return invalid() || lastError != 0; }
 
     bool findNext() {
         auto res = FindNextFileW(handle,&data);
@@ -48,9 +50,24 @@ GlobFile::GlobFile()
 GlobFile::~GlobFile()
 {}
 
+GlobFile::GlobFile(GlobFile && other):
+    impl(std::move(other.impl))
+{}
+
+GlobFile & GlobFile::operator=(GlobFile && other)
+{
+    impl = std::move(other.impl);
+    return *this;
+}
+
 die::NativeString GlobFile::filename() const
 {
     return impl->data.cFileName;
+}
+
+size_t GlobFile::filesize() const
+{
+    return (impl->data.nFileSizeHigh * (MAXDWORD+1)) + impl->data.nFileSizeLow;
 }
 
 bool GlobFile::isDirectory() const
@@ -92,15 +109,15 @@ GlobFile const * GlobIterator::operator->() const
 
 GlobIterator & GlobIterator::operator++()
 {
-    if( ! file.impl->findNext() ) {
-        file.impl.reset();
-    }
+    file.impl->findNext();
+    
     return *this;
 }
 
 bool GlobIterator::operator==(GlobIterator const & it) const
 {
-    return ! file.impl && ! it.file.impl;           // they are equal only at the sentinel value
+    // they are equal only at the sentinel value
+    return (! file.impl || file.impl->hasError() ) && ! it.file.impl;           
 }
 
 bool GlobIterator::operator!=(GlobIterator const & it) const
