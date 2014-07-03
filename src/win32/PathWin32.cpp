@@ -1,18 +1,17 @@
 #include "../classes/Path.h"
+#include <algorithm>
 
 namespace fs {
 
 char const Path::delim = '\\';
 char const Path::otherDelim = '/';
 
-char const wdelim = wchar_t(Path::delim);
-char const wotherDelim = wchar_t(Path::otherDelim);
+wchar_t const wdelim = wchar_t(Path::delim);
+wchar_t const wotherDelim = wchar_t(Path::otherDelim);
 
 die::NativeString Path::normalize(die::NativeString path)
 {
-    for( wchar_t & ch : path.wstr ) {
-        if( ch == wotherDelim ) ch = wdelim;
-    }
+    std::replace(path.wstr.begin(),path.wstr.end(),wotherDelim,wdelim);
     if( ! path.empty() && path.wstr.back() == wdelim ) {
         path.wstr.erase(std::prev(path.wstr.end()));
     }
@@ -21,6 +20,18 @@ die::NativeString Path::normalize(die::NativeString path)
     }
     return path;
 }
+
+die::NativeString Path::changeSeparator(die::NativeString path, char ch)
+{
+    return changeSeparator(path,wchar_t(ch));
+}
+
+die::NativeString Path::changeSeparator(die::NativeString path, wchar_t ch)
+{
+    std::replace(path.wstr.begin(),path.wstr.end(),wdelim,ch);
+    return path;
+}
+
 
 void Path::addDelim()
 {

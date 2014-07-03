@@ -19,7 +19,9 @@ public:
 
     static char const delim;
     static char const otherDelim;
-    static die::NativeString normalize(die::NativeString path);    
+    static die::NativeString normalize(die::NativeString path);
+    static die::NativeString changeSeparator(die::NativeString path, char ch);
+    static die::NativeString changeSeparator(die::NativeString path, wchar_t ch);
     static bool isDelim(char ch);
     static bool isDelim(wchar_t ch);
 };
