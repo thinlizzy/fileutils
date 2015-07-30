@@ -9,7 +9,7 @@ char const Path::otherDelim = '/';
 wchar_t const wdelim = wchar_t(Path::delim);
 wchar_t const wotherDelim = wchar_t(Path::otherDelim);
 
-die::NativeString Path::normalize(die::NativeString path)
+Filename Path::normalize(Filename path)
 {
     std::replace(path.wstr.begin(),path.wstr.end(),wotherDelim,wdelim);
     if( ! path.empty() && path.wstr.back() == wdelim ) {
@@ -21,12 +21,12 @@ die::NativeString Path::normalize(die::NativeString path)
     return path;
 }
 
-die::NativeString Path::changeSeparator(die::NativeString path, char ch)
+Filename Path::changeSeparator(Filename path, char ch)
 {
     return changeSeparator(path,wchar_t(ch));
 }
 
-die::NativeString Path::changeSeparator(die::NativeString path, wchar_t ch)
+Filename Path::changeSeparator(Filename path, wchar_t ch)
 {
     std::replace(path.wstr.begin(),path.wstr.end(),wdelim,ch);
     return path;

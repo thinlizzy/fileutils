@@ -8,11 +8,11 @@
 
 namespace fs {
 
-class GlobIterator: public std::iterator<std::forward_iterator_tag,GlobFile> {
+class GlobIterator: public std::iterator<std::forward_iterator_tag, GlobFile> {
     GlobFile file;
 public:
     GlobIterator() = default;
-    explicit GlobIterator(die::NativeString const & path);
+    explicit GlobIterator(Filename const & path);
 
     GlobFile & operator*();
     GlobFile const & operator*() const;

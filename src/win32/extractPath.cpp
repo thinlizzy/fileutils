@@ -2,7 +2,7 @@
 
 namespace fs {
 
-die::NativeString extractPath(die::NativeString const & path)
+Filename extractPath(Filename const & path)
 {
     return extractPath<wchar_t>(path.wstr);
 }

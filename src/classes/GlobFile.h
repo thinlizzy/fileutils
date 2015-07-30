@@ -2,7 +2,7 @@
 #define GLOB_FILE_H_j3432jvncxxx
 
 #include <memory>
-#include <NativeString.h>
+#include "Filename.h"
 
 namespace fs {
     
@@ -17,7 +17,7 @@ public:
     ~GlobFile();
     GlobFile(GlobFile && other);
     GlobFile & operator=(GlobFile && other);
-    die::NativeString filename() const;
+    Filename filename() const;
     size_t filesize() const;
     bool isDirectory() const;
     bool isSpecialDirectory() const;

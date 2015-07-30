@@ -3,12 +3,12 @@
 
 namespace fs {
 
-Path::Path(die::NativeString const & path):
+Path::Path(Filename const & path):
     path(normalize(path))
 {
 }
 
-Path Path::append(die::NativeString const & subpath) const
+Path Path::append(Filename const & subpath) const
 {
     Path result(*this);
     if( subpath.empty() ) return result;
@@ -25,17 +25,17 @@ Path Path::append(Path const & subpath) const
     return append(subpath.path);
 }
 
-Path Path::replaceFilename(die::NativeString const & filename) const
+Path Path::replaceFilename(Filename const & filename) const
 {
     return Path(extractPath(path)).append(filename);
 }
 
-Path::operator die::NativeString() const
+Path::operator Filename() const
 {
-    return getPath();
+    return asFilename();
 }
 
-die::NativeString Path::getPath() const
+Filename Path::asFilename() const
 {
     return path;
 }

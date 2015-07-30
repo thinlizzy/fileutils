@@ -2,26 +2,26 @@
 #define FUNCTIONS_H_GUARD_3498urewjfdc
 
 #include "../classes/Status.h"
-#include <NativeString.h>
+#include "../classes/Filename.h"
 #include <string>
 
 namespace fs {
     
 struct PathAndName {
-    die::NativeString path;
-    die::NativeString filename;
+    Filename path;
+    Filename filename;
 };
 
-Status createDirectory(die::NativeString const & path);
+Status createDirectory(Filename const & path);
 
 // returns the path w/o the filename
-die::NativeString extractPath(die::NativeString const & path);
+Filename extractPath(Filename const & path);
 
 // returns the filename w/o the path and extensions
-die::NativeString extractFilename(die::NativeString const & path);
+Filename extractFilename(Filename const & path);
 
 // returns both
-PathAndName extractPathAndName(die::NativeString const & path);
+PathAndName extractPathAndName(Filename const & path);
 
 template<typename T>
 std::basic_string<T> extractPath(std::basic_string<T> const & path);

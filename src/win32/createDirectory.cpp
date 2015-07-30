@@ -3,7 +3,7 @@
 
 namespace fs {
 
-Status createDirectory(die::NativeString const & path)
+Status createDirectory(Filename const & path)
 {
     auto ok = CreateDirectoryW(path.wstr.c_str(),0);
     if( ok ) return Status::ok;

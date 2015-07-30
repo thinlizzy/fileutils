@@ -57,12 +57,10 @@ int wOpenFlags(std::ios_base::openmode mode)
 
 namespace fs {
     
-#ifdef __MINGW32__
-
 // MINGW does not implement the fucking wchar_t * fstream constructor overload, so I have to manually create a __gnu_cxx::stdio_filebuf
 
 // TODO something is wrong here. filebuf is doing seg faults and other awful things
-#define MITIGATION_FIX
+// #define MITIGATION_FIX
     
 int checkFd(int fd) 
 {
@@ -87,7 +85,7 @@ public:
 
 // TODO mitigation to the __gnu_cxx::stdio_filebuf problem. it won't work with non-ascii names
 
-FileStreamWrapper::FileStreamWrapper(die::NativeString const & filename, std::ios_base::openmode mode):
+FileStreamWrapper::FileStreamWrapper(Filename const & filename, std::ios_base::openmode mode):
     std::fstream(filename.toUTF8(),mode)
 {
 }
@@ -98,14 +96,14 @@ FileStreamWrapper::FileStreamWrapper(FileStreamWrapper && other)
     other.std::ios::rdbuf(0);
 }
 
-void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::openmode mode)
+void FileStreamWrapper::open(Filename const & filename, std::ios_base::openmode mode)
 {
     open(filename.toUTF8(),mode);
 }
 
 #else 
 
-FileStreamWrapper::FileStreamWrapper(die::NativeString const & filename, std::ios_base::openmode mode):
+FileStreamWrapper::FileStreamWrapper(Filename const & filename, std::ios_base::openmode mode):
     impl(new FileStreamWrapperImpl(filename.wstr.c_str(),mode))
 {
     std::ios::rdbuf(&impl->fb);
@@ -117,7 +115,7 @@ FileStreamWrapper::FileStreamWrapper(FileStreamWrapper && other):
     std::ios::rdbuf(&impl->fb);
 }
 
-void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::openmode mode)
+void FileStreamWrapper::open(Filename const & filename, std::ios_base::openmode mode)
 {
     impl.reset();
     impl.reset(new FileStreamWrapperImpl(filename.wstr.c_str(),mode));
@@ -129,32 +127,5 @@ void FileStreamWrapper::open(die::NativeString const & filename, std::ios_base::
 FileStreamWrapper::~FileStreamWrapper()
 {
 }
-
-#else
-
-// msvc has the desired wchar_t * fstream constructor overload
-
-FileStreamWrapper::FileStreamWrapper(char const filename[], std::ios_base::openmode mode):
-    fstream(utf8_to_ws(filename).c_str(),mode)
-{
-}
-
-// TODO not tested, but fstream should have a move constructor according to the specs
-
-FileStreamWrapper::FileStreamWrapper(FileStreamWrapper && other):
-    fstream(std::move(other))
-{
-}
-    
-FileStreamWrapper::~FileStreamWrapper()
-{
-}
-
-void FileStreamWrapper::open(char const filename[], std::ios_base::openmode mode = std::ios_base::in|std::ios_base::out)
-{
-    fstream::open(utf8_to_ws(filename).c_str(),mode);
-}
-
-#endif
 
 }

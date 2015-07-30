@@ -60,7 +60,7 @@ GlobFile & GlobFile::operator=(GlobFile && other)
     return *this;
 }
 
-die::NativeString GlobFile::filename() const
+Filename GlobFile::filename() const
 {
     return impl->data.cFileName;
 }
@@ -83,7 +83,7 @@ bool GlobFile::isSpecialDirectory() const
 
 // Iterator
 
-GlobIterator::GlobIterator(die::NativeString const & path):
+GlobIterator::GlobIterator(Filename const & path):
     file(new GlobImpl(path.wstr.c_str()))
 {}
 
